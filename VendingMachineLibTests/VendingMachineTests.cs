@@ -66,7 +66,7 @@ namespace VendingMachineLibTests
         }
         
         [Fact]
-        public void Purchase_Successfull_ReturnsProduct()
+        public void Purchase_Successful_ReturnsProduct()
         {
             _vendor.InsertMoney(500);
             var product = new Drink("Socker Dryck", 20 , "Läsk");
