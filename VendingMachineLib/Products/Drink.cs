@@ -1,4 +1,4 @@
-namespace VendingMachineLib
+namespace VendingMachineLib.Products
 {
     public class Drink : Product
     {

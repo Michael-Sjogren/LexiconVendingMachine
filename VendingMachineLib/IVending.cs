@@ -1,13 +1,14 @@
+using VendingMachineLib.Products;
+
 namespace VendingMachineLib
 {
     public interface IVending
     {
-        
-        public bool SelectProduct(uint productId);
-        void InsertMoney(int money);
-        public uint[] CalculateChange(int price, uint[] moneyInserted);
-        Product PurchaseProduct(uint productId);
-        void EndTransaction();
-        
+        public string ShowAllProducts();
+        public bool InsertMoney(int money);
+        public int[] CalculateChange(int price, int[] moneyInserted);
+        public Product Purchase(int productIndex);
+        public int[] EndTransaction();
+        public bool AddProduct(Product p);
     }
 }

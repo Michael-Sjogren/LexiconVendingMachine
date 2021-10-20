@@ -1,5 +1,8 @@
 using System;
+using System.Linq;
+using VendingMachineLib.Products;
 using VendingMachineLib;
+
 using Xunit;
 
 namespace VendingMachineLibTests
@@ -10,7 +13,8 @@ namespace VendingMachineLibTests
 
         public VendingMachineTests()
         {
-            _vendor = new VendingMachine(CurrencyType.SEK, new uint []{1,5,20,50,100,500,1000});
+            _vendor = new VendingMachine(CurrencyType.SEK, new int []{1,5,20,50,100,500,1000});
+            _vendor.FillVendorWithProducts();
         }
         public void Dispose() { }
 
@@ -28,24 +32,24 @@ namespace VendingMachineLibTests
         {
             // empty array
             Assert.Throws<ArgumentException>(
-                () => new VendingMachine(CurrencyType.SEK, Array.Empty<uint>())
+                () => new VendingMachine(CurrencyType.SEK, Array.Empty<int>())
             );
         }
 
         [Fact]
-        public void Construct_ZeroesInDenominations_ThrowsException()
+        public void Construct_BelowOrEqualZeroInDenominations_ThrowsException()
         {
             // array with zeroes
             Assert.Throws<ArgumentException>(
-                () => new VendingMachine(CurrencyType.GBP, new uint[]{0,1})
+                () => new VendingMachine(CurrencyType.GBP, new int[]{0,1 , -1})
             );
         }
         
         [Fact]
         public void Construct_DuplicateDenominations_ReturnsUniqueValues()
         {
-            var dupes = new uint[] { 1 , 5 , 100 , 100 ,500 };
-            var expected = new uint[] {1, 5, 100, 500};
+            var dupes = new int[] { 1  , 100 , 100 ,500 , 5 };
+            var expected = new int[] {1, 5, 100, 500};
             _vendor = new VendingMachine(CurrencyType.SEK, dupes);
             var actual = _vendor.Denominations;
             
@@ -53,28 +57,58 @@ namespace VendingMachineLibTests
         }
 
         [Fact]
-        public void PurchaseProduct_SuccessPurchase_ReturnsProduct()
+        public void Purchase_AbsentProduct_ThrowsException()
         {
-            var product = new Food("Noodles", 29);
-            //var actual = _vendor.PurchaseProduct(product);
+            _vendor.InsertMoney(500);
+            Assert.Throws<ArgumentException>( () => _vendor.Purchase(-1));
+            Assert.Throws<ArgumentException>( () => _vendor.Purchase(100));
 
+        }
+        
+        [Fact]
+        public void Purchase_Successfull_ReturnsProduct()
+        {
+            _vendor.InsertMoney(500);
+            var product = new Drink("Socker Dryck", 20);
+            const int expectedChangeSum = 500 - 20;
+            _vendor.AddProduct(product);
+            var productIndex = _vendor.GetProductIndexByName(product.ProductName);
+            var actual = _vendor.Purchase(productIndex);
+            var change = _vendor.EndTransaction();
+            Assert.Equal(expectedChangeSum,change.Sum());
+            Assert.Equal(product , actual);
+            
         }
 
         [Fact]
-        public void InsertMoney_AbsentDenominationValue_ThrowsException()
+        public void InsertMoney_AbsentInDenominations_ThrowsException()
         {
+            _vendor = new VendingMachine(CurrencyType.SEK, new int []{1,5,20,50,100,500,1000});
             const int insertedValue = 25;
-            Action action = () => _vendor.InsertMoney(insertedValue);
-            Assert.Throws<ArgumentException>(action);
+            Assert.Throws<ArgumentException>(() => _vendor.InsertMoney(insertedValue));
         }
+        [Fact]
+        public void CalculateChange_NegativeValues_ThrowsException()
+        {
+            const int price = 200;
+            int[] insertedMoney = { -100 };
+            Assert.Throws<ArgumentException>( (() => _vendor.CalculateChange(price, insertedMoney)));
+        }
+        
+        [Fact]
+        public void CalculateChange_InsertedIsLowerThanPrice_ThrowsException()
+        {
+            const int price = 200;
+            int[] insertedMoney = { 100 };
+            Assert.Throws<ArgumentException>( (() => _vendor.CalculateChange(price, insertedMoney)));
+        }
+
+        
         [Theory]
-        [InlineData(3,new uint[]{5},new uint[]{1,1})]
-        [InlineData(200,new uint[]{500},new uint[]{100,100,100})]
-        [InlineData(5,new uint[]{5},new uint[]{})]
-        [InlineData(1,new uint[]{5},new uint[]{1,1,1,1})]
-        [InlineData(1,new uint[]{},new uint[]{})]
-        [InlineData(1,null,new uint[]{})]
-        public void CalculateChange_ReturnsCorrectAmount(int price, uint[] insertedMoney, uint[] expected)
+        [InlineData(3,new int[]{5},new int[]{1,1})]
+        [InlineData(200,new int[]{500},new int[]{100,100,100})]
+        [InlineData(1,new int[]{5},new int[]{1,1,1,1})]
+        public void CalculateChange_ReturnsCorrectAmount(int price, int[] insertedMoney, int[] expected)
         {
             var actual = _vendor.CalculateChange(price, insertedMoney);
             Assert.Equal(expected,actual);
