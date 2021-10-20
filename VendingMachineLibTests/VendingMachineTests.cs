@@ -69,7 +69,7 @@ namespace VendingMachineLibTests
         public void Purchase_Successfull_ReturnsProduct()
         {
             _vendor.InsertMoney(500);
-            var product = new Drink("Socker Dryck", 20);
+            var product = new Drink("Socker Dryck", 20 , "Läsk");
             const int expectedChangeSum = 500 - 20;
             _vendor.AddProduct(product);
             var productIndex = _vendor.GetProductIndexByName(product.ProductName);
