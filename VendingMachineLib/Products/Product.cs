@@ -6,6 +6,20 @@ namespace VendingMachineLib.Products
     {
         private int _price;
         private string _productName;
+        private string _info;
+        public string Info
+        {
+            get => _info;
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("This product has no info.");
+                }
+
+                _info = value;
+            }
+        }
         public string ProductName
         {
             get => _productName;
@@ -27,15 +41,16 @@ namespace VendingMachineLib.Products
             } 
         }
 
-        protected Product(string productName, int price)
+        protected Product(string productName, int price , string info)
         {
             ProductName = productName;
             Price = price;
+            Info = info;
         }
         
         public virtual string Examine()
         {
-            return $"Name: {ProductName} Price: {Price}";
+            return $"Price: {Price} Info: {Info}";
         }
 
         public abstract string Use();

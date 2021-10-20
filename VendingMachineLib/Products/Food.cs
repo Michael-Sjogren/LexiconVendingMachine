@@ -2,13 +2,18 @@ namespace VendingMachineLib.Products
 {
     public class Food : Product
     {
-        public Food(string productName, int price) : base(productName, price)
+        public Food(string productName, int price , string info) : base(productName, price, info)
         {
+        }
+
+        public override string Examine()
+        {
+            return "You can eat this.";
         }
 
         public override string Use()
         {
-            return "You can eat me!";
+            return $"You just ate {ProductName}";
         }
     }
 }
