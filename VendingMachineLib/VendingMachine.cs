@@ -34,27 +34,28 @@ namespace VendingMachineLib
         }
         public bool AddProduct(Product p)
         {
+            if (p == null) return false;
             if (_products.Exists((e) => e.ProductName.Equals(p.ProductName)))
             {
                 return false;
             }
             _products.Add(p);
-            return false;
+            return true;
         }
         
         public void FillVendorWithProducts()
         {
             _products = new List<Product>()
             {
-                new Drink("Coca Cola Zero",10),
-                new Drink("Fanta",10),
-                new Drink("Sprite",10),
-                new Food("Sandwich",25),
-                new Food("Apple",12),
-                new Food("Berries",12),
-                new Toy("Fidget Spinner",200),
-                new Toy("JoJo",100),
-                new Toy("Remote Controlled Toy Car", 500)
+                new Drink("Coca Cola Zero", 10, "A sweet fizzy drink."),
+                new Drink("Fanta", 10, "A sweet fizzy drink."),
+                new Drink("Sprite", 10, "A sweet fizzy drink."),
+                new Food("Sandwich", 25, "A Sandwich with ham, cheese and butter."),
+                new Food("Apple", 12, "An apple."),
+                new Food("Berries", 12, "100g of blue berries."),
+                new Toy("Fidget Spinner", 200, "It spins."),
+                new Toy("JoJo", 100, "Goes up and down."),
+                new Toy("Remote Controlled Toy Car", 500, "You can drive around with this. Batteries not included.")
             };
             
             _products = _products.OrderBy( (e) => e.Price ).ToList();
@@ -72,8 +73,9 @@ namespace VendingMachineLib
         
         /**
          * Returns array of change to simulate you receiving bills and coins.
+         * Assuming valid denominations are {1,5,10,20,50,100,500,1000}
          * 
-         * if you have inserted 500 SEK and you buy something for 100 SEK
+         * If you have inserted 500 SEK and you buy something for 100 SEK
          * you will receive 4x 100 bills as change: int[]{100,100,100,100}.
          *
          */
@@ -84,9 +86,9 @@ namespace VendingMachineLib
             {
                 throw new ArgumentException("No money inserted.");
             }
-            var totalInserted = moneyInserted.Aggregate((x,y) => x+y);
+            var inserted = moneyInserted.Aggregate((x,y) => x+y);
             // cant afford
-            if (totalInserted < price)
+            if (inserted < price)
             {
                 throw new ArgumentException("You do not have enough money.");
             }
@@ -94,7 +96,7 @@ namespace VendingMachineLib
             var change = new List<int>();
             var i = _denominations.Length - 1;
             
-            var difference = Math.Abs(price - totalInserted);
+            var difference = inserted - price;
             while (difference > 0)
             {
                 if (difference < _denominations[i])
