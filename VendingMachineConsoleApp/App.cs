@@ -33,9 +33,12 @@ namespace VendingMachineConsoleApp
                 {
                     Console.Clear();
                     Console.WriteLine("Welcome to this vending Machine!");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(info);
+                    Console.ResetColor();
                     Console.WriteLine("Here is a list of all products:");
                     Console.WriteLine(_vendor.ShowAllProducts());
-                    Console.WriteLine(info);
+                    Console.WriteLine();
                     Console.WriteLine($"Money Inserted: {_vendor.TotalMoneyInserted}" );
                     var cmd = GetCommandFromUserInput();
                     switch (cmd)

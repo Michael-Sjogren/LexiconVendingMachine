@@ -69,6 +69,14 @@ namespace VendingMachineLib
             }
             return -1;
         }
+        
+        /**
+         * Returns array of change to simulate you receiving bills and coins.
+         * 
+         * if you have inserted 500 SEK and you buy something for 100 SEK
+         * you will receive 4x 100 bills as change: int[]{100,100,100,100}.
+         *
+         */
         public int[] CalculateChange(int price, int[] moneyInserted)
         {
             // no money inserted
@@ -131,10 +139,10 @@ namespace VendingMachineLib
             for (var i = 0; i < _products.Count; i++)
             {
                 var p = _products[i];
-                builder.Append(string.Format("{0,-5}",  i));
-                builder.Append(string.Format("{0,-35}",  p.ProductName));
-                builder.Append(string.Format("{0,5}",  p.Price));
-                builder.Append(string.Format("{0,5}",  _currency));
+                builder.Append($"{i,-3}");
+                builder.Append($"{p.ProductName,-35}");
+                builder.Append($"{p.Price,5}");
+                builder.Append($"{_currency,4}");
                 builder.AppendLine();
             }
             return builder.ToString();
