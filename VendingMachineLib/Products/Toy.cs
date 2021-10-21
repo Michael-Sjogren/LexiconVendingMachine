@@ -8,7 +8,7 @@ namespace VendingMachineLib.Products
 
         public override string Use()
         {
-            return "You are playing with this toy!";
+            return $"You are playing with {ProductName}!";
         }
     }
 }

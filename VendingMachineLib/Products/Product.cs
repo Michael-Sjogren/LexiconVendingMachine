@@ -29,8 +29,7 @@ namespace VendingMachineLib.Products
                 _productName = value;
             }
         }
-
-        public string ProductInfo { get; set; }
+        
         public int Price 
         { 
             get => _price;
@@ -48,7 +47,7 @@ namespace VendingMachineLib.Products
             Info = info;
         }
         
-        public virtual string Examine()
+        public string Examine()
         {
             return $"Price: {Price} Info: {Info}";
         }

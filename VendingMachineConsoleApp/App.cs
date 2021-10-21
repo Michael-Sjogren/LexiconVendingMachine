@@ -57,7 +57,9 @@ namespace VendingMachineConsoleApp
                             Insert();
                             break;
                         default:
-                            continue;
+                            Console.WriteLine("Unknown Command.");
+                            Console.ReadKey();
+                            break;
                     }
                 }           
             }
