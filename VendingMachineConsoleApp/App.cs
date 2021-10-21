@@ -7,10 +7,10 @@ namespace VendingMachineConsoleApp
 {
         public enum Command
         {
-            unknown,
-            ins,
-            buy,
-            quit
+            Unknown,
+            Ins,
+            Buy,
+            Quit
         }
         public class App
         {
@@ -25,9 +25,9 @@ namespace VendingMachineConsoleApp
                 );
                 _vendor.FillVendorWithProducts();
                 var info =
-                    $"Enter: '{Command.ins.ToString()}' to insert money " +
-                    $"or '{Command.buy.ToString()}' to purchase a product." +
-                    $"\nAnd '{Command.quit.ToString()}' to quit the application.";
+                    $"Enter: '{Command.Ins.ToString().ToLower()}' to insert money " +
+                    $"or '{Command.Buy.ToString().ToLower()}' to purchase a product." +
+                    $"\nAnd '{Command.Quit.ToString().ToLower()}' to quit the application.";
                 
                 while (isRunning)
                 {
@@ -43,17 +43,17 @@ namespace VendingMachineConsoleApp
                     var cmd = GetCommandFromUserInput();
                     switch (cmd)
                     {
-                        case Command.quit:
+                        case Command.Quit:
                             isRunning = false;
                             break;
-                        case Command.buy:
+                        case Command.Buy:
                             Buy();
                             break;
-                        case Command.unknown:
+                        case Command.Unknown:
                             Console.WriteLine("Unknown Command.");
                             Console.ReadKey();
                             break;
-                        case Command.ins:
+                        case Command.Ins:
                             Insert();
                             break;
                         default:
@@ -108,24 +108,12 @@ namespace VendingMachineConsoleApp
             {
                 Console.Write("Command: ");
                 var input = GetInput();
-                if (string.IsNullOrEmpty(input)) return Command.unknown;
+                if (string.IsNullOrEmpty(input)) return Command.Unknown;
                 input = input.Trim().ToLower();
-  
-                if(input.Equals(Command.buy.ToString().ToLower()))
-                {
-                    return Command.buy;
-                }
-                if(input.Equals(Command.ins.ToString()))
-                {
-                    return Command.ins;
-                }
-                
-                if(input.Equals(Command.quit.ToString()))
-                {
-                    return Command.quit;
-                }
+                Command cmd;
+                Enum.TryParse<Command>(input , true , out cmd);
 
-                return Command.unknown;
+                return cmd;
             }
             
             private int GetNumberFromUserInput()

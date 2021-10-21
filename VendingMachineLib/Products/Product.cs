@@ -25,7 +25,7 @@ namespace VendingMachineLib.Products
             get => _productName;
             set
             {
-                if (String.IsNullOrEmpty(value)) throw new ArgumentException("Product name cannot be null or empty.");
+                if (string.IsNullOrEmpty(value)) throw new ArgumentException("Product name cannot be null or empty.");
                 _productName = value;
             }
         }

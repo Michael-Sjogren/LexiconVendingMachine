@@ -7,6 +7,20 @@ namespace VendingMachineLibTests
     public class ProductTests
     {
         [Fact]
+        public void Construct_A_Product()
+        {
+            const string name = "Cheese";
+            const string info = "A dairy product";
+            const int price = 200;
+            
+            var product = new Food(name, price, info);
+            
+            Assert.Equal(name, product.ProductName);
+            Assert.Equal(info, product.Info);
+            Assert.Equal(price, product.Price);
+        }
+        
+        [Fact]
         public void Construct_ProductWithEmptyName_ThrowsException()
         {
             Assert.Throws<ArgumentException>(() => new Food("", 10 , ""));
